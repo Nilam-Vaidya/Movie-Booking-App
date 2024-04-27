@@ -1,14 +1,42 @@
 const express = require('express');
+const cors=require('cors');
+const mongoose = require('mongoose');
+
+const { url, options } = require('./config/db.config');
+//Routes
 const movieRoutes=require('./routes/movie.routes');
 const artistRoutes=require('./routes/artist.routes');
 const genreRoutes = require('./routes/genre.routes');
-
 const userController = require('./controllers/user.controller');
 
 const app=express();
 const port=5000;
 
+
+// mongoose.connect('mongodb://localhost:27017/moviesdb', {
+//     useNewUrlParser: true,
+//     useUnifiedTopology: true
+// }).then(() => {
+//     console.log('Connected to MongoDB');
+// }).catch((err) => {
+//     console.error('Error connecting to MongoDB:', err.message);
+//     process.exit(1); // Exit the process if MongoDB connection fails
+// });
+mongoose.connect(url, options)
+  .then(() => {
+    console.log('Connected to MongoDB');
+    // Your code here
+  })
+  .catch((err) => {
+    console.error('Error connecting to MongoDB:', err);
+  });
+
+// Middleware
+app.use(cors()); // Specify CORS policy
 app.use(express.json());
+
+// Middleware to disable favicon request
+app.get('/favicon.ico', (req, res) => res.status(204));
 
 app.get("/", (req, res) => {
     res.json({ message: "Welcome to Upgrad Movie booking application development." });
@@ -16,7 +44,7 @@ app.get("/", (req, res) => {
 
 
 
-app.use("/api", movieRoutes);
+app.use('/api', movieRoutes);
 app.use("/api", artistRoutes);
 app.use("/api", genreRoutes);
 

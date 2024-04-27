@@ -35,6 +35,10 @@ const login = async (req, res) => {
 
 const logout = async (req, res) => {
     const { userId } = req.body;
+    if (!userId) {
+        return res.status(400).json({ message: 'userId is required' });
+    }
+
     try {
         // Perform logout operation based on userId
         res.status(200).json({ message: 'Logout successful' });
@@ -43,8 +47,31 @@ const logout = async (req, res) => {
     }
 };
 
+
+const getCouponCode = async (req, res) => {
+    try {
+        // Your logic to generate and return a coupon code
+        const couponCode = generateCouponCode(); // Example function to generate a coupon code
+        res.status(200).json({ couponCode });
+    } catch (err) {
+        res.status(500).json({ message: 'Internal server error' });
+    }
+};
+
+const bookShow = async (req, res) => {
+    try {
+        // Your logic to book a show
+        const bookingDetails = bookShow(); // Example function to book a show
+        res.status(200).json({ bookingDetails });
+    } catch (err) {
+        res.status(500).json({ message: 'Internal server error' });
+    }
+};
+
 module.exports = {
     signUp,
     login,
-    logout
+    logout,
+    getCouponCode,
+    bookShow
 };
